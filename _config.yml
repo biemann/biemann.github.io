@@ -5,6 +5,8 @@ url: https://biemann.github.io/
 paginate: 1
 baseurl: ""
 permalink: pretty
+markdown: kramdown
+mathjax: true
 
 # Gems
 plugins:

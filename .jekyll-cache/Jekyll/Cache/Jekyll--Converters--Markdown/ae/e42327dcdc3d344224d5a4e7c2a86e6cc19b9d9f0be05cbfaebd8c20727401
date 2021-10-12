@@ -1,0 +1,306 @@
+I"22<p>Due to the importance of hyperparameters in RL experiments, we aim to provide more details here. Due to the limited page requirements, it was not realistically possible to include it in the original paper. As a disclamer, the architectures between the algorithms differ largely in size, therefore this paper is not meant to be a benchmark study between the algorithms, but more to show that using methods for POMDPs can be valuable for some applications in energy management.</p>
+
+<p>For all experiments, we used a discount factor of \(\gamma=0.99\).</p>
+
+<h2 id="proximal-policy-optimisation-ppo">Proximal Policy Optimisation (PPO)</h2>
+
+<p>Recall that <a href="https://arxiv.org/abs/1707.06347">PPO</a> is an actor-critic algorithm. We are interested in finding the policy \(\pi_{\theta}(a\mid o)\) (or more generally \(\pi_{\theta}(a\mid h)\)). To do this, it is however necessary to predict the rewards in order to update the policy. Therefore, we  also need to train a critic \(V_w(s)\).</p>
+
+<p>The critic learns the value function \(V_w(s)\) that minimises the multistep Bellman error:</p>
+
+\[\frac{1}{2}\mathbb{E}_{\tau \sim p_{\pi}}[(V_w(s_t)-y(s_t,a_t))^2\]
+
+<p>with</p>
+
+\[y\left(s_{t}, a_{t}\right)=\sum_{l=0}^{T-t-1} \gamma^{l} r\left(s_{t+l}, a_{t+l}\right)+\gamma^{T-t} V_{w_{\mathrm{old}}}\left(s_{T}\right).\]
+
+<p>This allows to compute estimates of the advantage function using Generalised Advantage Estimation (<a href="https://arxiv.org/abs/1506.02438">GAE</a>):</p>
+
+\[\hat{A}\left(s_{t}, a_{t}\right)=\sum_{l=0}^{T-t-1}(\lambda \gamma)^{l}\left(r(s_{t+l},a_{t+l})+\gamma V_w(s_{t+l+1})-V_w(s_{t+l})\right).\]
+
+<p>These estimates are used to update the policy. The policy minimises the following loss:</p>
+
+\[L_{\pi}(\theta)=\mathbb{E}_{s \sim \rho^{\pi_{\theta_{\text {old }}}}, a \sim \pi_{\theta_{\text {old }}}}\left[\min \left(\frac{\pi_{\theta}(a \mid s)}{\pi_{\theta_{\text {old }}}(a \mid s)} \hat{A}(s, a), g(\varepsilon, \hat{A}(s, a))\right)\right],\]
+
+<p>where</p>
+
+\[g(\varepsilon, A)=\left\{\begin{array}{ll}
+(1+\varepsilon) A &amp; \text { if } A \geq 0, \\
+(1-\varepsilon) A &amp; \text { if } A&lt;0.
+\end{array}\right.\]
+
+<h3 id="ppo-with-feed-forward-networks">PPO with feed-forward networks:</h3>
+
+<p>For PPO with a feed-forward network, we used the implementation from <a href="https://github.com/DLR-RM/stable-baselines3">StableBaselines3</a>. We kept the same hyperparameters and used the same parameters than for our <a href="https://www.sciencedirect.com/science/article/pii/S0306261921005961">prior work</a>. We report the parameters in the following table:</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>Critic network</td>
+      <td>\(5\rightarrow 64 \rightarrow 64 \rightarrow 1\)</td>
+    </tr>
+    <tr>
+      <td>Actor network</td>
+      <td>\(5 \rightarrow 64 \rightarrow 64 \rightarrow (2\times 4)\)</td>
+    </tr>
+    <tr>
+      <td>Activation function</td>
+      <td>Tanh</td>
+    </tr>
+    <tr>
+      <td>Optimiser</td>
+      <td>Adam</td>
+    </tr>
+    <tr>
+      <td>Learning Rate</td>
+      <td>\(3 \cdot 10^{-4}\)</td>
+    </tr>
+    <tr>
+      <td>Batch Size</td>
+      <td>64</td>
+    </tr>
+    <tr>
+      <td>Trace-decay parameter (\(\lambda\))</td>
+      <td>0.95</td>
+    </tr>
+    <tr>
+      <td>Horizon (T)</td>
+      <td>2048</td>
+    </tr>
+    <tr>
+      <td>Number of Epochs</td>
+      <td>15</td>
+    </tr>
+    <tr>
+      <td>Clipping Range (\(\varepsilon\))</td>
+      <td>0.2</td>
+    </tr>
+    <tr>
+      <td>Global Gradient Clipping</td>
+      <td>0.5</td>
+    </tr>
+    <tr>
+      <td>Entropy regularisation</td>
+      <td>None</td>
+    </tr>
+    <tr>
+      <td>Target KL early stopping</td>
+      <td>None</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>For more information about what these parameters do, we refer to the <a href="https://stable-baselines3.readthedocs.io/en/master/modules/ppo.html">documentation</a>. We believe that the results of PPO on this case study can be significantly improved if we take into account the recent <a href="https://arxiv.org/abs/2006.05990">large-scale hyperparameter studies</a>.</p>
+
+<h3 id="ppo-with-lstm">PPO with LSTM:</h3>
+
+<p>For an architecture with LSTM, as discussed in the paper, it is more complicated and the two networks are merged into one: 
+  <img src="/assets/images/lstmppo-1.png" alt="lstm" class="img-responsive" /></p>
+
+<p>As StableBaselines3 does not contain yet an implementation of recurrent policies, we used the implementation of <a href="https://github.com/hill-a/stable-baselines">StableBaselines</a> instead (in Tensorflow instead of Pytorch). We report the parameters in the following table:</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>Neurons of Feed-forward layers (before LSTM cell)</td>
+      <td>64</td>
+    </tr>
+    <tr>
+      <td>Neurons of LSTM layers</td>
+      <td>256</td>
+    </tr>
+    <tr>
+      <td>Optimiser</td>
+      <td>Adam</td>
+    </tr>
+    <tr>
+      <td>Learning Rate</td>
+      <td>\(3 \cdot 10^{-4}\)</td>
+    </tr>
+    <tr>
+      <td>Trace-decay parameter (\(\lambda\))</td>
+      <td>0.95</td>
+    </tr>
+    <tr>
+      <td>Horizon (T)</td>
+      <td>256</td>
+    </tr>
+    <tr>
+      <td>Number of Epochs</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <td>Clipping range (\(\varepsilon\))</td>
+      <td>0.2</td>
+    </tr>
+    <tr>
+      <td>Global Gradient Clipping</td>
+      <td>0.5</td>
+    </tr>
+    <tr>
+      <td>Layer normalisation</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <td>Entropy regularisation</td>
+      <td>None</td>
+    </tr>
+    <tr>
+      <td>Target KL early stopping</td>
+      <td>None</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>We use a lower horizon to avoid backprogating too far through time. We also use less epochs for updating the networks before collecting new data for better computational efficiency. Note that the choice of architecture can be customised in several different ways. We can also use feed-forward layers after the LSTM cell, use GRU instead of LSTM etc. Other libraries, such as <a href="https://github.com/ray-project/ray">RLLib</a>, use different architectures.</p>
+
+<h2 id="soft-actor-critic-sac">Soft Actor Critic (SAC)</h2>
+
+<p><a href="https://arxiv.org/abs/1812.05905">SAC</a> has shown tremendous success in recent years and became the most popular off-policy RL algorithm for continuous control. The major difference compared to other algorithms comes from the fact that it optimises the maximum entropy RL objective (with \(\alpha &gt; 0\)) :</p>
+
+\[J^{\text{soft}}({\pi}) =\mathbb{E}_{\tau \sim p_{\pi}}\left[\sum_{t\geq 0}\gamma^t \left(r(s_t, a_t)-\alpha\log\pi(a_t\mid s_t)\right)\right].\]
+
+<p>Similarily to many off-policy methods, the critic \(Q_w(s,a)\) is trained to minimise the Bellman error:</p>
+
+\[L(w)=\frac{1}{2}\mathbb{E}_{(s,a,s')\sim \mathcal{U}(D)}\left[\left(y(s,a,s')- Q_w(s,a)\right)^2\right],\]
+
+<p>where</p>
+
+\[y\left(s, a, s^{\prime}\right)=r(s, a)+\gamma\left(\min _{j=1,2} Q_{\bar{w}_{j}}\left(s^{\prime}, a^{\prime}\right)-\alpha \log \pi_{\theta}\left(a^{\prime} \mid s^{\prime}\right)\right),\]
+
+<p>where \(a'\sim \pi_{\theta}(\cdot\mid s').\) We use two target networks to reduce the overestimation bias (as in double Q-learning or TD3).</p>
+
+<p>The policy optimises the following objective in order to satisfy a policy improvement step:</p>
+
+\[L_{\pi}(\theta)=\mathbb{E}_{s \sim \mathcal{U}(D), a \sim \pi_{\theta}}\left[\alpha \log \pi_{\theta}(a \mid s)-Q_{w}(s, a)\right].\]
+
+<p>The gradient of this loss strongly resembles the DDPG update (but with additional temperature parameter). It is common to tune the temperature as well, as the performance is sensitive to this hyperparameter and we may want to decrease its value over time (similar to the exploration parameter \(\varepsilon\) when using \(\varepsilon\)-greedy exploration for Q-learning).</p>
+
+<h3 id="sac-with-feed-forward-networks">SAC with feed-forward networks:</h3>
+
+<p>The following architecture is standard. We used the implementation of <a href="https://github.com/DLR-RM/stable-baselines3">StableBaselines3</a>. The output of the actor is \((\mu_{\theta}(s), \sigma_{\theta}(s))\); the action is then sampled from a diagonal multivariate Gaussian distribtion.</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>Number of critics</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>Critic networks</td>
+      <td>\(9\rightarrow 256 \rightarrow 256\rightarrow 1\)</td>
+    </tr>
+    <tr>
+      <td>Actor network</td>
+      <td>\(5 \rightarrow 256\rightarrow 256 \rightarrow (2\times 4)\)</td>
+    </tr>
+    <tr>
+      <td>Activation function</td>
+      <td>Relu</td>
+    </tr>
+    <tr>
+      <td>Optimiser</td>
+      <td>Adam</td>
+    </tr>
+    <tr>
+      <td>Learning rate</td>
+      <td>\(3 \cdot 10^{-4}\)</td>
+    </tr>
+    <tr>
+      <td>Batch size</td>
+      <td>256</td>
+    </tr>
+    <tr>
+      <td>Polyak averaging (\(\tau\))</td>
+      <td>\(5 \cdot 10^{-3}\)</td>
+    </tr>
+    <tr>
+      <td>Temperature (\(\alpha\))</td>
+      <td>Automatically adjusted</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="sac-with-lstm">SAC with LSTM:</h3>
+
+<p>SAC with LSTM is not really standard in the literature. We found only little implementations, among them <a href="https://github.com/quantumiracle/Popular-RL-Algorithms">PopularRL algorithms</a>, <a href="https://github.com/google-research/seed_rl">SeedRL</a> and the implementation by <a href="https://github.com/oist-cnru/Variational-Recurrent-Models">Han et. al</a>. We used the first one, as it was a clean implementation. All implementations use the architecture of <a href="https://arxiv.org/abs/1710.06537">Peng et. al</a>.</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>Number of critics</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>Neurons of feed-forward layers of critics</td>
+      <td>256</td>
+    </tr>
+    <tr>
+      <td>Neurons of LSTM cell of critics</td>
+      <td>256</td>
+    </tr>
+    <tr>
+      <td>Neurons of feed-forward layers of actor</td>
+      <td>128</td>
+    </tr>
+    <tr>
+      <td>Neurons of LSTM cell of actor</td>
+      <td>256</td>
+    </tr>
+    <tr>
+      <td>Sequence length</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <td>Batch size</td>
+      <td>16</td>
+    </tr>
+    <tr>
+      <td>Activation function (outside of LSTM)</td>
+      <td>Relu</td>
+    </tr>
+    <tr>
+      <td>Optimiser</td>
+      <td>Adam</td>
+    </tr>
+    <tr>
+      <td>Learning rate</td>
+      <td>\(3 \cdot 10^{-4}\)</td>
+    </tr>
+    <tr>
+      <td>Polyak averaging (\(\tau\))</td>
+      <td>\(10^{-2}\)</td>
+    </tr>
+    <tr>
+      <td>Temperature (\(\alpha\))</td>
+      <td>Automatically adjusted</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The policy network contains two branches:</p>
+
+<ol>
+  <li>one recurrent branch has \((a_{t-1}, o_t)\) as input, goes through one linear layer, before entering an LSTM cell.</li>
+  <li>the second feed-forward branch has \(o_t\) as input and goes through one linear layer.</li>
+  <li>the output of both branches are concatenated and go through two other linear layers and has \((\mu_{\theta}(s), \sigma_{\theta}(s))\) as output.</li>
+</ol>
+
+<p>The critics also contain two branches:</p>
+
+<ol>
+  <li>one recurrent branch has \((a_{t-1}, o_t)\) as input, goes through one linear layer, before entering an LSTM cell.</li>
+  <li>the second feed-forward branch has \((a_t, o_t)\) as input and goes through one linear layer.</li>
+  <li>the output of both branches are concatenated and go through two other linear layers and has its Q-value as output.</li>
+</ol>
+
+<p>The motivation of using two branches is that the recurrent branch is supposed to infer the dynamics of the environment, making the approach arguably model-based. As the current observation \(o_t\) is of fundamental importance, it is preprocessed by another branch to make sure that this information is still available after going through the LSTM cell.</p>
+
+<h2 id="stochastic-latent-actor-critic-slac">Stochastic Latent Actor Critic (SLAC)</h2>
+
+<p><a href="https://arxiv.org/abs/1907.00953">SLAC</a> is a generalisation of SAC to POMDPs. The derivation of the objective follows the same idea as SAC. It uses the <a href="https://arxiv.org/abs/1805.00909">control as inference</a> framework, which interprets control as a probabilistic inference problem. This can be used to derive the maximum entropy RL objective that is used by SAC. If we apply the same ideas to a POMDP, instead of an MDP, we arrive at the objective of SLAC.</p>
+
+<p>The actor and critic losses are therefore identical to SAC; the only difference comes from the fact that we also need to approximate the belief. We have, therefore, this loss as well:</p>
+
+\[J_M(\varphi, \psi) = \mathbb{E}_{s_{1:\tau + 1}\sim q_{\varphi}}\left[\sum_{t=0}^{\tau}-\log e_{\psi}(o_{t+1}\mid s_{t+1}) + \mathcal{D}_{KL}(q_{\varphi}(s_{t+1}\mid o_{t+1}, s_t, a_t)\Vert p_{\varpsi}(s_{t+1}\mid s_t, a_t))\right].\]
+:ET

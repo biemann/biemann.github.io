@@ -1,0 +1,94 @@
+I"ñ<p>Due to the importance of hyperparameters in RL experiments, we aim to provide more details here. Due to the limited page requirements, it was not realistically possible to include it in the original paper. As a disclamer, the architectures differ largely in size, therefore this paper is not meant to be a benchmark study between the algorithms, but more to show that using methods for POMDPs can be valuable for some applications in energy management.</p>
+
+<p>For all experiments, we used a discount factor of \(\gamma=0.99\).</p>
+
+<h2 id="proximal-policy-optimisation-ppo">Proximal Policy Optimisation (PPO)</h2>
+
+<p>Recall that <a href="https://arxiv.org/abs/1707.06347">PPO</a> is an actor-critic algorithm. We are interested in finding the policy \(\pi_{\theta}(a\mid o)\) (or more generally \(\pi_{\theta}(a\mid h)\)). To do this, it is however necessary to predict the rewards in order to update the policy. Therefore, we  also need to train a critic \(V_w(s)\).</p>
+
+<p>The critic learns the value function \(V_w(s)\) that minimises the multistep Bellman error:</p>
+
+\[\frac{1}{2}\mathbb{E}_{\tau \sim p_{\pi}}[(V_w(s_t)-y(s_t,a_t))^2\]
+
+<p>with</p>
+
+\[y\left(s_{t}, a_{t}\right)=\sum_{l=0}^{T-t-1} \gamma^{l} r\left(s_{t+l}, a_{t+l}\right)+\gamma^{T-t} V_{w_{\mathrm{old}}}\left(s_{T}\right).\]
+
+<p>This allows to compute estimates of the advantage function using Generalised Advantage Estimation (<a href="https://arxiv.org/abs/1506.02438">GAE</a>):</p>
+
+\[\hat{A}\left(s_{t}, a_{t}\right)=\sum_{l=0}^{T-t-1}(\lambda \gamma)^{l}\left(r(s_{t+l},a_{t+l})+\gamma V_w(s_{t+l+1})-V_w(s_{t+l})\right).\]
+
+<p>These estimates are used by the policy to make decisions. The policy minimises the following loss:</p>
+
+\[L_{\pi}(\theta)=\mathbb{E}_{s \sim \rho^{\pi_{\theta_{\text {old }}}}, a \sim \pi_{\theta_{\text {old }}}}\left[\min \left(\frac{\pi_{\theta}(a \mid s)}{\pi_{\theta_{\text {old }}}(a \mid s)} \hat{A}(s, a), g(\varepsilon, \hat{A}(s, a))\right)\right],\]
+
+<p>where</p>
+
+\[g(\varepsilon, A)=\left\{\begin{array}{ll}
+(1+\varepsilon) A &amp; \text { if } A \geq 0, \\
+(1-\varepsilon) A &amp; \text { if } A&lt;0.
+\end{array}\right.\]
+
+<p>For PPO with a feed-forward network, we used the implementation from <a href="https://github.com/DLR-RM/stable-baselines3">StableBaselines3</a>. We kept the same hyperparameters and used the same parameters than for our <a href="https://www.sciencedirect.com/science/article/pii/S0306261921005961">prior work</a>. We report the parameters in the following table:</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>Critic network</td>
+      <td>\(5\rightarrow 64 \rightarrow 64 \rightarrow 1\)</td>
+    </tr>
+    <tr>
+      <td>Actor network</td>
+      <td>\(5 \rightarrow 64 \rightarrow 64 \rightarrow 4\)</td>
+    </tr>
+    <tr>
+      <td>Activation function</td>
+      <td>Tanh</td>
+    </tr>
+    <tr>
+      <td>Optimiser</td>
+      <td>Adam</td>
+    </tr>
+    <tr>
+      <td>Learning Rate</td>
+      <td>\(3 \cdot 10^{-4}\)</td>
+    </tr>
+    <tr>
+      <td>Batch Size</td>
+      <td>64</td>
+    </tr>
+    <tr>
+      <td>Trace-decay parameter (\(\lambda\))</td>
+      <td>0.95</td>
+    </tr>
+    <tr>
+      <td>Horizon (T)</td>
+      <td>2048</td>
+    </tr>
+    <tr>
+      <td>Number of Epochs</td>
+      <td>15</td>
+    </tr>
+    <tr>
+      <td>Clipping Range (\(\varepsilon\))</td>
+      <td>0.2</td>
+    </tr>
+    <tr>
+      <td>Global Gradient Clipping</td>
+      <td>0.5</td>
+    </tr>
+    <tr>
+      <td>Entropy regularisation</td>
+      <td>None</td>
+    </tr>
+    <tr>
+      <td>Target KL early stopping</td>
+      <td>None</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>For more information about what these parameters do, we refer to the <a href="https://stable-baselines3.readthedocs.io/en/master/modules/ppo.html">documentation</a>. We believe that the results of PPO on this case study can be significantly improved if we take into account the recent <a href="https://arxiv.org/abs/2006.05990">large-scale hyperparameter studies</a>.</p>
+
+<p>For LSTM  <img src="/assets/pdf/ppolstm.pdf" alt="hel" class="img-responsive" /></p>
+:ET

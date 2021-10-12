@@ -1,0 +1,39 @@
+I"!<p>Due to the importance of hyperparameters in RL experiments, we aim to provide more details here. Due to the limited page requirements, it was not realistically possible to include it in the original paper. For all experiments, we used a discount factor of \(\gamma=0.99\).</p>
+
+<h2 id="ppo">PPO</h2>
+
+<p>For PPO with a feed-forward network, we used the implementation from <a href="https://github.com/DLR-RM/stable-baselines3">StableBaselines3</a>. We kept the same hyperparameters and used the same parameters than for our <a href="https://www.sciencedirect.com/science/article/pii/S0306261921005961">prior work</a>. We report the parameters in the following table:</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>Critic network</td>
+      <td>\(5\rightarrow 64 \rightarrow 64 \rightarrow 1\)</td>
+    </tr>
+    <tr>
+      <td>Actor network</td>
+      <td>\(5 \rightarrow 64 \rightarrow 64 \rightarrow 4\)</td>
+    </tr>
+    <tr>
+      <td>Activation function</td>
+      <td>Tanh</td>
+    </tr>
+    <tr>
+      <td>Optimiser</td>
+      <td>Adam</td>
+    </tr>
+    <tr>
+      <td>Learning Rate</td>
+      <td>\(3 \cdot 10^{-4}\)</td>
+    </tr>
+    <tr>
+      <td>Batch Size</td>
+      <td>64</td>
+    </tr>
+    <tr>
+      <td>Trace-decay parameter (\(\lambda\))</td>
+      <td>0.95</td>
+    </tr>
+  </tbody>
+</table>
+:ET
