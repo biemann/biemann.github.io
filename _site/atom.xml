@@ -4,7 +4,7 @@
  <title>Poole</title>
  <link href="/atom.xml" rel="self"/>
  <link href="http://localhost:4000//"/>
- <updated>2021-10-12T02:53:05+02:00</updated>
+ <updated>2021-10-12T20:46:12+02:00</updated>
  <id>http://localhost:4000</id>
  <author>
    <name>Marco Biemann</name>
@@ -29,7 +29,7 @@ texture, with a sweet and unique flavor.&lt;/p&gt;
  </entry>
  
  <entry>
-   <title>Hyperparameters</title>
+   <title>Implementation details and architectures</title>
    <link href="http://localhost:4000//rlem2021/hyper"/>
    <updated>2021-10-08T00:00:00+02:00</updated>
    <id>http://localhost:4000/rlem2021/rlem2021-hyper</id>
@@ -64,7 +64,7 @@ texture, with a sweet and unique flavor.&lt;/p&gt;
 (1-\varepsilon) A &amp;amp; \text { if } A&amp;lt;0.
 \end{array}\right.\]
 
-&lt;h3 id=&quot;ppo-with-feed-forward-networks&quot;&gt;PPO with feed-forward networks:&lt;/h3&gt;
+&lt;h3 id=&quot;ppo-with-feed-forward-networks&quot;&gt;PPO with feed-forward networks&lt;/h3&gt;
 
 &lt;p&gt;For PPO with a feed-forward network, we used the implementation from &lt;a href=&quot;https://github.com/DLR-RM/stable-baselines3&quot;&gt;StableBaselines3&lt;/a&gt;. We kept the same hyperparameters and used the same parameters than for our &lt;a href=&quot;https://www.sciencedirect.com/science/article/pii/S0306261921005961&quot;&gt;prior work&lt;/a&gt;. We report the parameters in the following table:&lt;/p&gt;
 
@@ -127,7 +127,7 @@ texture, with a sweet and unique flavor.&lt;/p&gt;
 
 &lt;p&gt;For more information about what these parameters do, we refer to the &lt;a href=&quot;https://stable-baselines3.readthedocs.io/en/master/modules/ppo.html&quot;&gt;documentation&lt;/a&gt;. We believe that the results of PPO on this case study can be significantly improved if we take into account the recent &lt;a href=&quot;https://arxiv.org/abs/2006.05990&quot;&gt;large-scale hyperparameter studies&lt;/a&gt;.&lt;/p&gt;
 
-&lt;h3 id=&quot;ppo-with-lstm&quot;&gt;PPO with LSTM:&lt;/h3&gt;
+&lt;h3 id=&quot;ppo-with-lstm&quot;&gt;PPO with LSTM&lt;/h3&gt;
 
 &lt;p&gt;For an architecture with LSTM, as discussed in the paper, it is more complicated and the two networks are merged into one: 
   &lt;img src=&quot;/assets/images/lstmppo-1.png&quot; alt=&quot;lstm&quot; class=&quot;img-responsive&quot; /&gt;&lt;/p&gt;
@@ -211,7 +211,7 @@ texture, with a sweet and unique flavor.&lt;/p&gt;
 
 &lt;p&gt;The gradient of this loss strongly resembles the DDPG update (but with additional temperature parameter). It is common to tune the temperature as well, as the performance is sensitive to this hyperparameter and we may want to decrease its value over time (similar to the exploration parameter \(\varepsilon\) when using \(\varepsilon\)-greedy exploration for Q-learning).&lt;/p&gt;
 
-&lt;h3 id=&quot;sac-with-feed-forward-networks&quot;&gt;SAC with feed-forward networks:&lt;/h3&gt;
+&lt;h3 id=&quot;sac-with-feed-forward-networks&quot;&gt;SAC with feed-forward networks&lt;/h3&gt;
 
 &lt;p&gt;The following architecture is standard. We used the implementation of &lt;a href=&quot;https://github.com/DLR-RM/stable-baselines3&quot;&gt;StableBaselines3&lt;/a&gt;. The output of the actor is \((\mu_{\theta}(s), \sigma_{\theta}(s))\); the action is then sampled from a diagonal multivariate Gaussian distribtion.&lt;/p&gt;
 
@@ -256,7 +256,7 @@ texture, with a sweet and unique flavor.&lt;/p&gt;
   &lt;/tbody&gt;
 &lt;/table&gt;
 
-&lt;h3 id=&quot;sac-with-lstm&quot;&gt;SAC with LSTM:&lt;/h3&gt;
+&lt;h3 id=&quot;sac-with-lstm&quot;&gt;SAC with LSTM&lt;/h3&gt;
 
 &lt;p&gt;SAC with LSTM is not really standard in the literature. We found only little implementations, among them &lt;a href=&quot;https://github.com/quantumiracle/Popular-RL-Algorithms&quot;&gt;PopularRL algorithms&lt;/a&gt;, &lt;a href=&quot;https://github.com/google-research/seed_rl&quot;&gt;SeedRL&lt;/a&gt; and the implementation by &lt;a href=&quot;https://github.com/oist-cnru/Variational-Recurrent-Models&quot;&gt;Han et. al&lt;/a&gt;. We used the first one, as it was a clean implementation. All implementations use the architecture of &lt;a href=&quot;https://arxiv.org/abs/1710.06537&quot;&gt;Peng et. al&lt;/a&gt;.&lt;/p&gt;
 
@@ -337,13 +337,15 @@ texture, with a sweet and unique flavor.&lt;/p&gt;
 
 &lt;p&gt;The actor and critic losses are therefore identical to SAC; the only difference comes from the fact that we also need to approximate the belief. We have, therefore, this loss as well:&lt;/p&gt;
 
-\[J_M(\varphi, \psi) = \mathbb{E}_{s_{1:\tau + 1}\sim q_{\varphi}}\left[\sum_{t=0}^{\tau}\left[-\log e_{\psi}(o_{t+1}\mid s_{t+1}) + \mathcal{D}_{KL}(q_{\varphi}(s_{t+1}\mid o_{t+1}, s_t, a_t)\Vert p_{\psi}(s_{t+1}\mid s_t, a_t))\right]\right].\]
+\[\begin{align}
+J_M(\varphi, \psi) &amp;amp;= \mathbb{E}_{s_{1:\tau + 1}\sim q_{\varphi}}\Big[\sum_{t=0}^{\tau}\Big(-\log e_{\psi}(o_{t+1}\mid s_{t+1}) \\ &amp;amp;+ \mathcal{D}_{KL}(q_{\varphi}(s_{t+1}\mid o_{t+1}, s_t, a_t)\Vert p_{\psi}(s_{t+1}\mid s_t, a_t))\Big)\Big]. 
+\end{align}\]
 
 &lt;p&gt;We separated the contribution to the encoder weights \(\varphi\) and the decoder weights \(\psi\). The intuiton behind this is that the networks have different roles:&lt;/p&gt;
 
 &lt;ol&gt;
   &lt;li&gt;The encoder \(q_{\varphi}\) aims to approximate the belief, that is it aims to learn a latent representation of the state. This state can then used by the critic to estimate future rewards.&lt;/li&gt;
-  &lt;li&gt;The observation decoder \(e_{\psi}\) aims to generate realistic samples, given by the environment.&lt;/li&gt;
+  &lt;li&gt;The observation decoder \(e_{\psi}\) aims to generate samples that resemble the ones given by the environment.&lt;/li&gt;
   &lt;li&gt;The transition decoder \(p_{\psi}\) aims to model the environment, so that the state is updated when an action is taken in a similar way than the “true” state of the environment.&lt;/li&gt;
 &lt;/ol&gt;
 
@@ -365,6 +367,158 @@ texture, with a sweet and unique flavor.&lt;/p&gt;
 &lt;p&gt;This implies that we have 7 neural networks to train: 2 critics, 1 actor, 2 decoders and 2 encoders (one for the first time-step using only the initial observation as input, the other using the current observation, along with the previous state and action as input). However, as we shall see, the original implementation is more complicated…&lt;/p&gt;
 
 &lt;h3 id=&quot;the-actual-implementation-with-latent-variable-factorisation&quot;&gt;The actual implementation with latent variable factorisation…&lt;/h3&gt;
+
+&lt;p&gt;Lee et. al use two-variable factorisation model, meaning that they write \(s_t=(z_t^1, z_t^2)\) and write&lt;/p&gt;
+
+\[q_{\varphi}(s_1\mid o_1) = q_{\varphi}(z^2_1\mid z_1^1)q_{\varphi}(z_1^1\mid o_1)\]
+
+&lt;p&gt;and&lt;/p&gt;
+
+\[q_{\varphi}(s_t\mid o_t, a_{t-1}, s_{t-1})=\textcolor{blue}{q_{\varphi}(z^2_t\mid z^1_t,z^2_{t-1},a_{t-1})}q_{\varphi}(z^1_t\mid o_t, z^2_{t-1},a_{t-1}).\]
+
+&lt;p&gt;We do a similar factorisation for the decoder:&lt;/p&gt;
+
+\[p_{\psi}(s_t\mid s_{t-1}, a_{t-1})=\textcolor{blue}{p_{\psi}(z_t^2\mid z^1_t,z^2_{t-1},a_{t-1})}p_{\psi}(z^1_t\mid z^2_{t-1},a_{t-1}).\]
+
+&lt;p&gt;The terms in blue have the same input, so a common simplification is to use the same network \(p_{\psi}(z_t^2\mid z^1_t,z^2_{t-1},a_{t-1})\) for both the encoder and decoder. This design simplifies the training process. This idea to combine VAE with autoregressive models is for instance discussed by &lt;a href=&quot;https://arxiv.org/abs/1902.02102&quot;&gt;Maaløe et. al.&lt;/a&gt; and has been used in image generation tasks, obtaining competitive performance to generative adversarial networks (GAN). Lee et. al. performed an ablation study and showed that this design significantly improves performance.&lt;/p&gt;
+
+&lt;p&gt;Another important design choice is whether the policy \(\pi_{\theta}\) should use the latent state \(s_t\sim q_{\varphi}\) as input or be conditioned on the history \(h_t=(o_1,a_1,\cdots, o_t)\). There is some debate on what choice should be used. SLAC uses the history as input and argues that using the latent state as input leads to over-optimistic behaviour. Furthermore, during runtime, we can run the policy without requiring an inference model. However, &lt;a href=&quot;https://arxiv.org/abs/1912.10703&quot;&gt;Han et. al.&lt;/a&gt; argues that this choice makes it impossible for the agent to remember long-term dependencies, as the policy only takes into account the recent past. An ablation study is done in the SLAC paper and similar results are obtained. In our experiments, we used the history as imput. However, the critic \(Q_w(s_t,a_t)\) is conditioned on the state \(s_t\sim q_{\varphi}\) and obtains significantly worse results otherwise.&lt;/p&gt;
+
+&lt;p&gt;Another network is used to model the reward function. However, we believe that for our application, this design choice is not essential, as we defined the reward function with the current observation only, so it is not difficult to infer. However, if the reward function is random or non-Markovian, this additional network may be beneficial. Therefore, using the notations of the two-variable factorisation, we have in addition the reward decoder:&lt;/p&gt;
+
+\[\hat{r}_{t+1} \sim r_{\psi}(\cdot\mid z^1_t,z_t^2,a_t,z_{t+1}^1,z_{t+1}^2).\]
+
+&lt;p&gt;Therefore, a sequence of rewards \((\hat{r}_1, \cdots, \hat{r}_{\tau})\) is also generated and another likelihood term for the rewards should be added to the loss function. This means that the state should not only include information to explain observations, but also the rewards.&lt;/p&gt;
+
+&lt;p&gt;Summing up, the actual loss function for the VAE is the following:&lt;/p&gt;
+
+\[\begin{align} 
+J_M(\varphi, \psi) &amp;amp;= \mathbb{E}_{z^1_{1:\tau + 1}\sim q_{\varphi}, z^2_{1:\tau +1}\sim p_{\psi}}\Big[\sum_{t=0}^{\tau}\Big(-\log e_{\psi}(o_{t+1}\mid z^1_{t+1}, z_{t+1}^2) \\ &amp;amp;-\log r_{\psi}(r_{t+1}\mid z^1_{t},z_{t}^2,a_{t},z_{t+1}^1,z_{t+1}^2) \\ &amp;amp;+ \mathcal{D}_{KL}(q_{\varphi}(z^1_{t+1}\mid o_{t+1}, z^2_t, a_t)\Vert p_{\psi}(z^1_{t+1}\mid z^2_t, a_t))\Big)\Big].
+\end{align}\]
+
+&lt;h3 id=&quot;implementation-details&quot;&gt;Implementation details&lt;/h3&gt;
+
+&lt;p&gt;An important additional change is necessary to adapt the architecture to the current case study. The SLAC paper has been implemented for image observations, so we need to adapt it to vector observations. This for example done by &lt;a href=&quot;https://arxiv.org/abs/1912.10703&quot;&gt;Han et. al.&lt;/a&gt; and we used the implementation available &lt;a href=&quot;https://github.com/oist-cnru/Variational-Recurrent-Models&quot;&gt;here&lt;/a&gt;. This implementation does the following design choices:&lt;/p&gt;
+
+&lt;p&gt;It uses the original version of SAC, which trains two critics: one critic \(Q_w(s,a)\) and the critic \(V_{\omega}(s)\). The Bellman targets use \(V_{\bar{\omega}}(s)\), hence \(V_{\omega}(s)\) is a network aiming to stabilise the Bellman residuals. The more commonly used version of SAC uses a target Q-network, as it involves training a network less. The implementation however uses temperature tuning, as introduced by SACv2.&lt;/p&gt;
+
+&lt;p&gt;They use two different networks to model \(\mu\) and \(\sigma\) respectively, each consisting of two layers without shared weights. This is different to the commonly used architectures in RL (e.g. in StableBaselines3), where the input goes through two linear layers and then goes to two separate heads (one for \(\mu\) and one for \(\sigma\)). In this paper, we used (by lazyness and because we already performed the experiments, before going through the code) the same design than Han et. al., but we believe that a modification here can significantly reduce computational time, without hurting performance.&lt;/p&gt;
+
+&lt;p&gt;All neural networks are feed-forward networks and both \(\mu\) and \(\sigma\) are trainable parameters. In the original paper, they used a fixed  \(\sigma\) for \(e_{\psi}\) to generate images. Furthermore, the actor is conditioned on past observations \((o_1,\cdots,o_{t})\) instead of the history \((o_1,a_1,\cdots, a_{t-1},o_t).\) The input of the policy is the dimension of observation space * sequence length. To deal with missing data, we use zero padding.&lt;/p&gt;
+
+&lt;p&gt;All the networks trained are summarised in the following table:&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Sequence length&lt;/td&gt;
+      &lt;td&gt;8&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Dimension of \(z^1\)&lt;/td&gt;
+      &lt;td&gt;16&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Dimension of \(z^2\)&lt;/td&gt;
+      &lt;td&gt;32&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Actor network \(\pi_{\theta}(a_t\mid o_1,\cdots,o_t)\)&lt;/td&gt;
+      &lt;td&gt;\(2\times(5\cdot 8\rightarrow 256 \rightarrow 256 \rightarrow 4)\)&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Value network \(V_{\omega}(z^2)\)&lt;/td&gt;
+      &lt;td&gt;\(32 \rightarrow 256 \rightarrow 256 \rightarrow 1\)&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Q-networks \(Q_{w_i}(z^2,a)\)&lt;/td&gt;
+      &lt;td&gt;\(2\times ((32+4)\rightarrow 256 \rightarrow 256 \rightarrow 1)\)&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Transition decoder \(p_{\psi}(z^1_{t+1}\mid z^2_t, a_t)\)&lt;/td&gt;
+      &lt;td&gt;\(2\times ((32 + 4)\rightarrow 128 \rightarrow 128 \rightarrow 16)\)&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Common encoder/decoder \(p_{\psi}(z^2_{t+1}\mid z^1_{t+1},z^2_t,a_t)\)&lt;/td&gt;
+      &lt;td&gt;\(2\times((32 + 16 + 4)\rightarrow 128 \rightarrow 128 \rightarrow 32)\)&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Initial transition decoder \(p_{\psi}(z^2_1\mid z^1_1)\)&lt;/td&gt;
+      &lt;td&gt;\(2\times(16 \rightarrow 128 \rightarrow 128\rightarrow 32)\)&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Emission decoder \(e_{\psi}(o_t\mid z^1_t,z^2_t)\)&lt;/td&gt;
+      &lt;td&gt;\(2\times ((32+16)\rightarrow 128\rightarrow 128\rightarrow 5)\)&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Reward decoder \(r_{\psi}(r_{t+1}\mid z^1_t,z_t^2,a_t,z_{t+1}^1,z_{t+1}^2)\)&lt;/td&gt;
+      &lt;td&gt;\(2\times((2\cdot(32+16)+4)\rightarrow 128\rightarrow 128\rightarrow 1)\)&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Belief encoder \(q_{\varphi}(z^1_{t+1}\mid o_{t+1},z^2_t,a_t)\)&lt;/td&gt;
+      &lt;td&gt;\(2\times((32+5+4)\rightarrow 128 \rightarrow 128 \rightarrow 16)\)&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Initial belief encoder \(q_{\varphi}(z^1_1\mid o_1)\)&lt;/td&gt;
+      &lt;td&gt;\(2\times (5\rightarrow 128 \rightarrow 128\rightarrow 16)\)&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Batch size&lt;/td&gt;
+      &lt;td&gt;64&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Activation functions of VAE&lt;/td&gt;
+      &lt;td&gt;Tanh&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Activation function of actor/critics&lt;/td&gt;
+      &lt;td&gt;Relu&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Optimiser&lt;/td&gt;
+      &lt;td&gt;Adam&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Learning rate of VAE&lt;/td&gt;
+      &lt;td&gt;\(10^{-4}\)&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Learning rate of actor/critcs&lt;/td&gt;
+      &lt;td&gt;\(3\cdot 10^{-4}\)&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Polyak averaging&lt;/td&gt;
+      &lt;td&gt;\(5\cdot 10^{-3}\)&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Temperature (\(\alpha\))&lt;/td&gt;
+      &lt;td&gt;Automatically adjusted&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Model pretraining&lt;/td&gt;
+      &lt;td&gt;5000&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Data collection before training starts&lt;/td&gt;
+      &lt;td&gt;1000&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;The last two lines mean that we collect data during 1000 timesteps (around 10 days) before pretraining the model. This explains the large performance improvement of SLAC (and SAC-LSTM using a similar trick) at the beginning of the training. This trick can significantly improve data efficiency and may be of interest for other algorithms.&lt;/p&gt;
+
+&lt;p&gt;We believe, as mentioned before, that the used architecture can be improved and made computationally cheaper in several ways:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Use one common architecture for \(\mu\) and \(\sigma\), reducing significantly the training time.&lt;/li&gt;
+  &lt;li&gt;Not train the value network, as it is proved not necessary in SACv2.&lt;/li&gt;
+  &lt;li&gt;Try conditioning the policy on the latent state, or also using previous actions as input (as used in the originals SLAC paper).&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;conclusions&quot;&gt;Conclusions&lt;/h2&gt;
+
+&lt;p&gt;The different architectures vary in size by several order of magnitudes, so this is not meant to be a fair comparison between the algorithms. Obviously, SAC-LSTM and SLAC with the current architecture sizes require a GPU for sanity. The RAM requirements of SLAC are high. We found that smaller networks in SLAC (e.g. with around 64 neurons) do not reduce the performence improvements by much, while still enjoying impressive data efficiency. This makes it technically possible to train a model on a CPU, as the additonal gains in data efficiency compensate for the higher computational time.&lt;/p&gt;
+
 </content>
  </entry>
  
