@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
- <title>Poole</title>
+ <title>Supplementary material</title>
  <link href="/atom.xml" rel="self"/>
  <link href="http://localhost:4000//"/>
- <updated>2021-10-12T20:46:12+02:00</updated>
+ <updated>2021-10-19T20:43:24+02:00</updated>
  <id>http://localhost:4000</id>
  <author>
    <name>Marco Biemann</name>
@@ -13,29 +13,261 @@
 
  
  <entry>
-   <title>Additional Plots</title>
-   <link href="http://localhost:4000//2021/10/11/rlem2021-plots/"/>
-   <updated>2021-10-11T00:00:00+02:00</updated>
-   <id>http://localhost:4000/2021/10/11/rlem2021-plots</id>
-   <content type="html">&lt;p&gt;Kiwifruit (often abbreviated as kiwi), or Chinese gooseberry is the edible
-berry of several species of woody vines in the genus Actinidia.&lt;/p&gt;
+   <title>Environment</title>
+   <link href="http://localhost:4000//rlem2021/env"/>
+   <updated>2021-10-19T00:00:00+02:00</updated>
+   <id>http://localhost:4000/rlem2021/rlem2021-env</id>
+   <content type="html">&lt;p&gt;This post describes the environment used in the paper more in detail. We performed our experiments on the open source two-zone data centre environment of &lt;a href=&quot;https://github.com/IBM/rl-testbed-for-energyplus&quot;&gt;Moriyama et. al.&lt;/a&gt;. We recommend taking a look at &lt;a href=&quot;https://arxiv.org/abs/1808.10427&quot;&gt;their paper&lt;/a&gt;, that describes the environment in far greater detail.&lt;/p&gt;
 
-&lt;p&gt;The most common cultivar group of kiwifruit is oval, about the size of a large
-hen’s egg (5–8 cm (2.0–3.1 in) in length and 4.5–5.5 cm (1.8–2.2 in) in
-diameter). It has a fibrous, dull greenish-brown skin and bright green or
-golden flesh with rows of tiny, black, edible seeds. The fruit has a soft
-texture, with a sweet and unique flavor.&lt;/p&gt;
+&lt;p&gt;The HVAC system of the data centre can be described in the following image:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/hvac_system-1.png&quot; alt=&quot;hvac&quot; class=&quot;img-responsive&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The experiments are done with EnergyPlus v.9.2.0&lt;/p&gt;
+
+&lt;h3 id=&quot;observation-space&quot;&gt;Observation space&lt;/h3&gt;
+
+&lt;p&gt;We used a 5 dimensional observation space:&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Variable&lt;/th&gt;
+      &lt;th&gt;Range&lt;/th&gt;
+      &lt;th&gt;Unit&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Outdoor air temperature&lt;/td&gt;
+      &lt;td&gt;[-20,50]&lt;/td&gt;
+      &lt;td&gt;°C&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;West zone air temperature&lt;/td&gt;
+      &lt;td&gt;[-20,50]&lt;/td&gt;
+      &lt;td&gt;°C&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;East zone air temperature&lt;/td&gt;
+      &lt;td&gt;[-20, 50]&lt;/td&gt;
+      &lt;td&gt;°C&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;IT equipment demand power&lt;/td&gt;
+      &lt;td&gt;[0,1]&lt;/td&gt;
+      &lt;td&gt;GW&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;HVAC equipment demand power&lt;/td&gt;
+      &lt;td&gt;[0,1]&lt;/td&gt;
+      &lt;td&gt;GW&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h3 id=&quot;action-space&quot;&gt;Action space&lt;/h3&gt;
+
+&lt;p&gt;We have a 4 dimensional action space:&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Variable&lt;/th&gt;
+      &lt;th&gt;Range&lt;/th&gt;
+      &lt;th&gt;Unit&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;West zone temperature setpoint&lt;/td&gt;
+      &lt;td&gt;[10,40]&lt;/td&gt;
+      &lt;td&gt;°C&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;East zone temperature setpoint&lt;/td&gt;
+      &lt;td&gt;[10,40]&lt;/td&gt;
+      &lt;td&gt;°C&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;West zone fan mass flow rate&lt;/td&gt;
+      &lt;td&gt;[1.75, 7.0]&lt;/td&gt;
+      &lt;td&gt;kg/s&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;East zone fan mass flow rate&lt;/td&gt;
+      &lt;td&gt;[1.75, 7.0]&lt;/td&gt;
+      &lt;td&gt;kg/s&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h3 id=&quot;modifications-from-the-original-environment&quot;&gt;Modifications from the original environment&lt;/h3&gt;
+
+&lt;p&gt;We performed small modifications to the original environment in order to implement algorithms that are not implemented with OpenAI Baselines. OpenAI Baselines normalises the state and action space automatically, but this is not the case of other implementations that assume that the environment is normalised.&lt;/p&gt;
+
+&lt;p&gt;We modified the following block in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rl-testbed-for-energyplus/gym_energyplus/envs/energyplus_model_2ZoneDataCenterHVAC_wEconomizer_Temp_Fan.py &lt;/code&gt; from&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;lo = 10.0
+hi = 40.0
+flow_hi = 7.0
+flow_lo = flow_hi * 0.25
+self.action_space = spaces.Box(low=np.array([lo,lo,flow_lo,flow_lo]),
+                               high=np.array([hi,hi,flow_hi,flow_hi]),
+                               dtype=np.float32)
+self.observation_space = spaces.Box(low=np.array(
+            [-20.0, -20.0, -20.0, 0.0, 0.0, 0.0]),
+            high=np.array(
+            [50.0,50.0,50.0,1000000000.0,1000000000.0,1000000000.0]),
+            dtype = np.float32)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;to:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;self.low_action = np.array([10.0, 10.0, 1.75, 1.75])
+self.high_action = np.array([40.0, 40.0, 7.0, 7.0])
+
+self.low_obs = np.array([-20.0, -20.0, -20.0, 0.0, 0.0])
+self.high_obs = np.array([50.0, 50.0, 50.0, 1e9, 1e9])
+
+self.action_space = spaces.Box(low=-1,high=1,shape=(4,),dtype=np.float32)
+self.observation_space = spaces.Box(low=-1,high=1,shape=(5,),dtype=np.float32)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;We also need to change the following in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rl-testbed-for-energyplus/gym_energyplus/envs/energyplus_model.py&lt;/code&gt;  in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;set_action(self, normalized_action)&lt;/code&gt;from&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;self.action_prev = self.action
+self.action = self.action_space.low + 
+      (normalized_action + 1.) * 0.5 * 
+      (self.action_space.high - self.action_space.low)
+self.action = np.clip(
+      self.action, self.action_space.low, self.action_space.high)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;to:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+self.action_prev = self.action
+self.action = np.clip(self.action,
+     self.action_space.low, self.action_space.high)
+self.action = self.low_action + (normalized_action + 1.) 
+    * 0.5 * (self.high_action - self.low_action)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Finally, we did the following modifications to the EnergyPlus controller file. With this change, we were able to reproduce the results by Moriyama et. al. in their paper. In &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;2ZoneDataCenterHVAC_wEconomizer-baseline.idf&lt;/code&gt; (l. 2984), we changed the air flow calculation method.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; ElectricEquipment:ITE:AirCooled,
+    EastDataCenter_Equip,    !- Name
+    East Zone,               !- Zone Name
+    !FlowControlWithApproachTemperatures,  !- Air Flow Calculation Method
+    FlowFromSystem,            ! New Air Flow Calculation Method
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;modifications-to-the-libraries&quot;&gt;Modifications to the libraries&lt;/h3&gt;
+
+&lt;p&gt;We mostly kept the code implementations intact, except for some hyperparameters we tuned. Some small modifications were nonetheless necessary.&lt;/p&gt;
+
+&lt;p&gt;We modified the SLAC implementation by &lt;a href=&quot;https://github.com/oist-cnru/Variational-Recurrent-Models&quot;&gt;Han et. al.&lt;/a&gt; in the following two ways:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;We avoid resetting the environment after 1000 steps. Resetting the environment means starting a new year. Instead of resetting, we continue the experiment in the same episode.&lt;/li&gt;
+  &lt;li&gt;We modified the implementation to make it run on a GPU.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;We also did the modification #1 in the implementation of &lt;a href=&quot;https://github.com/quantumiracle/Popular-RL-Algorithms&quot;&gt;SAC-LSTM&lt;/a&gt; from Ding.&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Additional Plots</title>
+   <link href="http://localhost:4000//rlem2021/plots"/>
+   <updated>2021-10-18T00:00:00+02:00</updated>
+   <id>http://localhost:4000/rlem2021/rlem2021-plots</id>
+   <content type="html">&lt;p&gt;We add supplementary plots that are tested in the paper to provide additional context. In the paper, we only reported plots of the results of SLAC and PPO-LSTM, as they performed best (and only for the first year).&lt;/p&gt;
+
+&lt;p&gt;We report the first five years of training to test the data efficiency of the algorithms, as well as the results of the test location (after 20 years of training).&lt;/p&gt;
+
+&lt;p&gt;The parameters of the experiment are slightly different than the ones of our &lt;a href=&quot;https://www.sciencedirect.com/science/article/pii/S0306261921005961?via%3Dihub&quot;&gt;previous paper&lt;/a&gt;, explaining the different results (for example, SAC in this paper has a better data efficiency). We used the same weather files than in the above paper. Note that we never reuse the same weather files again to ensure that no information about the future is leaked.&lt;/p&gt;
+
+&lt;h3 id=&quot;results&quot;&gt;Results&lt;/h3&gt;
+
+&lt;p&gt;For the energy consumption plot, we used a moving average over 4 days to keep the plots legible. There are large variations in day-night cycles and it would be difficult to compare the different algorithms otherwise.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/rlem2021consumption.png&quot; alt=&quot;cons&quot; class=&quot;img-responsive&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;For the temperature control plots, we take a moving average over 3 hours.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/rlem2021ppo.png&quot; alt=&quot;ppo&quot; class=&quot;img-responsive&quot; /&gt;
+  &lt;img src=&quot;/assets/images/rlem2021ppo-lstm.png&quot; alt=&quot;ppo-lstm&quot; class=&quot;img-responsive&quot; /&gt;
+  &lt;img src=&quot;/assets/images/rlem2021sac-mlp.png&quot; alt=&quot;sac&quot; class=&quot;img-responsive&quot; /&gt;
+  &lt;img src=&quot;/assets/images/rlem2021sac-great.png&quot; alt=&quot;sac-lstm&quot; class=&quot;img-responsive&quot; /&gt;
+  &lt;img src=&quot;/assets/images/rlem2021slac-top.png&quot; alt=&quot;slac&quot; class=&quot;img-responsive&quot; /&gt;
+  &lt;img src=&quot;/assets/images/rlem2021baseline.png&quot; alt=&quot;baseline&quot; class=&quot;img-responsive&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;weather-files&quot;&gt;Weather files&lt;/h3&gt;
+
+&lt;p&gt;We used the &lt;a href=&quot;https://energyplus.net/weather&quot;&gt;official EnergyPlus weather&lt;/a&gt; files for our experiments from the following locations:&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Years 1-10&lt;/th&gt;
+      &lt;th&gt;Years 11-20&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Oslo&lt;/td&gt;
+      &lt;td&gt;Hamburg&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Bergen&lt;/td&gt;
+      &lt;td&gt;Düsseldorf&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Stockholm&lt;/td&gt;
+      &lt;td&gt;Bremen&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Karlstad&lt;/td&gt;
+      &lt;td&gt;Saint Petersburg&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Kiruna&lt;/td&gt;
+      &lt;td&gt;Dundee&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Göteborg&lt;/td&gt;
+      &lt;td&gt;Amsterdam&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Tampere&lt;/td&gt;
+      &lt;td&gt;Groningen&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Helsinki&lt;/td&gt;
+      &lt;td&gt;Gdansk&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Berlin&lt;/td&gt;
+      &lt;td&gt;Szcezcin&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;The test location uses weather data from Copenhagen. In retroperspective, training for 20 years is very long and not necessary for all algorithms except PPO.&lt;/p&gt;
 </content>
  </entry>
  
  <entry>
    <title>Implementation details and architectures</title>
    <link href="http://localhost:4000//rlem2021/hyper"/>
-   <updated>2021-10-08T00:00:00+02:00</updated>
+   <updated>2021-10-12T00:00:00+02:00</updated>
    <id>http://localhost:4000/rlem2021/rlem2021-hyper</id>
    <content type="html">&lt;p&gt;Due to the importance of hyperparameters in RL experiments, we aim to provide more details here. Due to the limited page requirements, it was not realistically possible to include it in the original paper. As a disclamer, the architectures between the algorithms differ largely in size, therefore this paper is not meant to be a benchmark study between the algorithms, but more to show that using methods for POMDPs can be valuable for some applications in energy management.&lt;/p&gt;
 
-&lt;p&gt;For all experiments, we used a discount factor of \(\gamma=0.99\).&lt;/p&gt;
+&lt;p&gt;For all experiments, we used a discount factor of \(\gamma=0.99\). We did not fix a seed in our experiments (something to change in future work). In the paper, we only present the results of one run, but we observed while tuning hyperparameters that each algorithm obtains consistently a similar performence (with the possible exception of SAC-LSTM, which required more tuning to obtain the results of the paper).&lt;/p&gt;
 
 &lt;h2 id=&quot;proximal-policy-optimisation-ppo&quot;&gt;Proximal Policy Optimisation (PPO)&lt;/h2&gt;
 
@@ -402,9 +634,9 @@ J_M(\varphi, \psi) &amp;amp;= \mathbb{E}_{z^1_{1:\tau + 1}\sim q_{\varphi}, z^2_
 
 &lt;p&gt;It uses the original version of SAC, which trains two critics: one critic \(Q_w(s,a)\) and the critic \(V_{\omega}(s)\). The Bellman targets use \(V_{\bar{\omega}}(s)\), hence \(V_{\omega}(s)\) is a network aiming to stabilise the Bellman residuals. The more commonly used version of SAC uses a target Q-network, as it involves training a network less. The implementation however uses temperature tuning, as introduced by SACv2.&lt;/p&gt;
 
-&lt;p&gt;They use two different networks to model \(\mu\) and \(\sigma\) respectively, each consisting of two layers without shared weights. This is different to the commonly used architectures in RL (e.g. in StableBaselines3), where the input goes through two linear layers and then goes to two separate heads (one for \(\mu\) and one for \(\sigma\)). In this paper, we used (by lazyness and because we already performed the experiments, before going through the code) the same design than Han et. al., but we believe that a modification here can significantly reduce computational time, without hurting performance.&lt;/p&gt;
+&lt;p&gt;They use two different networks to model \(\mu\) and \(\sigma\) respectively, each consisting of two layers without shared weights. This is different to the commonly used architectures in RL (e.g. in StableBaselines3), where the input goes through two linear layers and then goes to two separate heads (one for \(\mu\) and one for \(\sigma\)). In this paper, we used (because we already performed the experiments, before going through the code) the same design than Han et. al., but we believe that a modification here can significantly reduce computational time, without hurting performance.&lt;/p&gt;
 
-&lt;p&gt;All neural networks are feed-forward networks and both \(\mu\) and \(\sigma\) are trainable parameters. In the original paper, they used a fixed  \(\sigma\) for \(e_{\psi}\) to generate images. Furthermore, the actor is conditioned on past observations \((o_1,\cdots,o_{t})\) instead of the history \((o_1,a_1,\cdots, a_{t-1},o_t).\) The input of the policy is the dimension of observation space * sequence length. To deal with missing data, we use zero padding.&lt;/p&gt;
+&lt;p&gt;All neural networks are feed-forward networks and both \(\mu\) and \(\sigma\) are trainable parameters. In the original paper, they used a fixed  \(\sigma\) for \(e_{\psi}\) to generate images. Furthermore, the actor is conditioned on past observations \((o_1,\cdots,o_{t})\) instead of the history \((o_1,a_1,\cdots, a_{t-1},o_t).\) The input of the policy is the dimension of observation space * sequence length. To deal with missing data, zero padding is used.&lt;/p&gt;
 
 &lt;p&gt;All the networks trained are summarised in the following table:&lt;/p&gt;
 
@@ -427,11 +659,11 @@ J_M(\varphi, \psi) &amp;amp;= \mathbb{E}_{z^1_{1:\tau + 1}\sim q_{\varphi}, z^2_
       &lt;td&gt;\(2\times(5\cdot 8\rightarrow 256 \rightarrow 256 \rightarrow 4)\)&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
-      &lt;td&gt;Value network \(V_{\omega}(z^2)\)&lt;/td&gt;
+      &lt;td&gt;Value network \(V_{\omega}(z^2_t)\)&lt;/td&gt;
       &lt;td&gt;\(32 \rightarrow 256 \rightarrow 256 \rightarrow 1\)&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
-      &lt;td&gt;Q-networks \(Q_{w_i}(z^2,a)\)&lt;/td&gt;
+      &lt;td&gt;Q-networks \(Q_{w_i}(z^2_t,a_t)\)&lt;/td&gt;
       &lt;td&gt;\(2\times ((32+4)\rightarrow 256 \rightarrow 256 \rightarrow 1)\)&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
@@ -507,49 +739,10 @@ J_M(\varphi, \psi) &amp;amp;= \mathbb{E}_{z^1_{1:\tau + 1}\sim q_{\varphi}, z^2_
 
 &lt;p&gt;The last two lines mean that we collect data during 1000 timesteps (around 10 days) before pretraining the model. This explains the large performance improvement of SLAC (and SAC-LSTM using a similar trick) at the beginning of the training. This trick can significantly improve data efficiency and may be of interest for other algorithms.&lt;/p&gt;
 
-&lt;p&gt;We believe, as mentioned before, that the used architecture can be improved and made computationally cheaper in several ways:&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Use one common architecture for \(\mu\) and \(\sigma\), reducing significantly the training time.&lt;/li&gt;
-  &lt;li&gt;Not train the value network, as it is proved not necessary in SACv2.&lt;/li&gt;
-  &lt;li&gt;Try conditioning the policy on the latent state, or also using previous actions as input (as used in the originals SLAC paper).&lt;/li&gt;
-&lt;/ol&gt;
-
 &lt;h2 id=&quot;conclusions&quot;&gt;Conclusions&lt;/h2&gt;
 
-&lt;p&gt;The different architectures vary in size by several order of magnitudes, so this is not meant to be a fair comparison between the algorithms. Obviously, SAC-LSTM and SLAC with the current architecture sizes require a GPU for sanity. The RAM requirements of SLAC are high. We found that smaller networks in SLAC (e.g. with around 64 neurons) do not reduce the performence improvements by much, while still enjoying impressive data efficiency. This makes it technically possible to train a model on a CPU, as the additonal gains in data efficiency compensate for the higher computational time.&lt;/p&gt;
+&lt;p&gt;The different architectures vary in size by several order of magnitudes, so this is not meant to be a fair comparison between the algorithms. Obviously, SAC-LSTM and SLAC with the current architecture sizes require a GPU. The RAM requirements of SLAC are also high. We found that smaller networks in SLAC (e.g. with around 64 neurons) do not reduce the performence improvements by much, while still enjoying impressive data efficiency. This makes it technically possible to train a model on a CPU, as the additonal gains in data efficiency compensate for the higher computational time.&lt;/p&gt;
 
-</content>
- </entry>
- 
- <entry>
-   <title>Apples</title>
-   <link href="http://localhost:4000//2018/08/21/apples/"/>
-   <updated>2018-08-21T00:00:00+02:00</updated>
-   <id>http://localhost:4000/2018/08/21/apples</id>
-   <content type="html">&lt;p&gt;An apple is a sweet, edible fruit produced by an apple tree.&lt;/p&gt;
-
-&lt;p&gt;Apple trees are cultivated worldwide, and are the most widely grown species in
-the genus Malus. The tree originated in Central Asia, where its wild ancestor,
-Malus sieversii, is still found today. Apples have been grown for thousands of
-years in Asia and Europe, and were brought to North America by European
-colonists.&lt;/p&gt;
-</content>
- </entry>
- 
- <entry>
-   <title>Firstpost</title>
-   <link href="http://localhost:4000//2018/08/20/firstpost/"/>
-   <updated>2018-08-20T00:00:00+02:00</updated>
-   <id>http://localhost:4000/2018/08/20/firstpost</id>
-   <content type="html">&lt;p&gt;A banana is an edible fruit – botanically a berry – produced by several kinds
-of large herbaceous flowering plants in the genus Musa.&lt;/p&gt;
-
-&lt;p&gt;In some countries, bananas used for cooking may be called “plantains”,
-distinguishing them from dessert bananas. The fruit is variable in size, color,
-and firmness, but is usually elongated and curved, with soft flesh rich in
-starch covered with a rind, which may be green, yellow, red, purple, or brown
-when ripe.&lt;/p&gt;
 </content>
  </entry>
  

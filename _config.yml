@@ -1,9 +1,9 @@
 # Setup
-title: Poole
-tagline: The Jekyll Butler
+title: Supplementary material
+tagline: Rlem2021
 url: https://biemann.github.io/
 paginate: 1
-baseurl: ""
+baseurl: "/"
 permalink: pretty
 markdown: kramdown
 mathjax: true

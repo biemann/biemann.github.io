@@ -1,49 +1,4 @@
-<!doctype html>
-<html lang="en">
-
-  <head>
-  <link href="http://gmpg.org/xfn/11" rel="profile">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta http-equiv="content-type" content="text/html; charset=utf-8">
-
-  <!-- Enable responsiveness on mobile devices-->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-
-  <title>
-    
-      Implementation details and architectures &middot; Supplementary material
-    
-  </title>
-
-  <!-- CSS -->
-  <link rel="stylesheet" href="/assets/css/poole.css">
-  <link rel="stylesheet" href="/assets/css/syntax.css">
-  <link rel="stylesheet" href="/assets/css/hyde.css">
-  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
-
-  <!-- Icons -->
-  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/assets/images/apple-touch-icon-precomposed.png">
-  <link rel="shortcut icon" href="/assets/images/favicon.ico">
-
-  <!-- RSS -->
-  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
-</head>
-
-  <body class="theme-base-08">
-
-    <div class="container content">
-      <header class="masthead">
-        <h3 class="masthead-title">
-          <a href="//" title="Home">Supplementary material</a>
-          <small>Rlem2021</small>
-        </h3>
-      </header>
-
-      <main>
-        <article class="page">
-  <h1 class="page-title">Implementation details and architectures</h1>
-  <time datetime="2021-10-12T00:00:00+02:00" class="post-date">12 Oct 2021</time>
-  <p>Due to the importance of hyperparameters in RL experiments, we aim to provide more details here. Due to the limited page requirements, it was not realistically possible to include it in the original paper. As a disclamer, the architectures between the algorithms differ largely in size, therefore this paper is not meant to be a benchmark study between the algorithms, but more to show that using methods for POMDPs can be valuable for some applications in energy management.</p>
+I"ad<p>Due to the importance of hyperparameters in RL experiments, we aim to provide more details here. Due to the limited page requirements, it was not realistically possible to include it in the original paper. As a disclamer, the architectures between the algorithms differ largely in size, therefore this paper is not meant to be a benchmark study between the algorithms, but more to show that using methods for POMDPs can be valuable for some applications in energy management.</p>
 
 <p>For all experiments, we used a discount factor of \(\gamma=0.99\). We did not fix a seed in our experiments (something to change in future work). In the paper, we only present the results of one run, but we observed while tuning hyperparameters that each algorithm obtains consistently a similar performence (with the possible exception of SAC-LSTM, which required more tuning to obtain the results of the paper).</p>
 
@@ -521,44 +476,4 @@ J_M(\varphi, \psi) &amp;= \mathbb{E}_{z^1_{1:\tau + 1}\sim q_{\varphi}, z^2_{1:\
 
 <p>The different architectures vary in size by several order of magnitudes, so this is not meant to be a fair comparison between the algorithms. Obviously, SAC-LSTM and SLAC with the current architecture sizes require a GPU. The RAM requirements of SLAC are also high. We found that smaller networks in SLAC (e.g. with around 64 neurons) do not reduce the performence improvements by much, while still enjoying impressive data efficiency. This makes it technically possible to train a model on a CPU, as the additonal gains in data efficiency compensate for the higher computational time.</p>
 
-
-</article>
-
-
-<aside class="related">
-  <h3>Related posts</h3>
-  <ul class="related-posts">
-    
-      <li>
-        <a href="//rlem2021/env">
-          Environment
-          <small><time datetime="2021-10-19T00:00:00+02:00">19 Oct 2021</time></small>
-        </a>
-      </li>
-    
-      <li>
-        <a href="//rlem2021/plots">
-          Additional Plots
-          <small><time datetime="2021-10-18T00:00:00+02:00">18 Oct 2021</time></small>
-        </a>
-      </li>
-    
-  </ul>
-</aside>
-
-      </main>
-
-      <footer class="footer">
-        <small>
-          &copy; <time datetime="2021-10-19T20:43:24+02:00">2021</time>. All rights reserved.
-        </small>
-      </footer>
-    </div>
-
-    
-  </body>
-</html>
-
-<script type="text/javascript" id="MathJax-script" async
-  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
-</script>
+:ET
