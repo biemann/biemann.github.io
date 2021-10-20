@@ -2,11 +2,4 @@
   link: /
 - name: Rlem
   link: /rlem2021.html
-- name: Hyperparameters
-  link: /rlem2021/hyper.html
-- name: Plots
-  link: /rlem2021/plots.html
-- name: Environment
-  link: /rlem2021/env.html
-- name: Paper
-  link: /paper.html
+

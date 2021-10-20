@@ -8,18 +8,23 @@ layout: default
   {{ content }}
 </article>
 
-{% if site.related_posts != empty %}
+{% if site.posts != empty %}
 <aside class="related">
+  {% if page.permalink != "rlem2021" %}
+  <h3>
+    <a href="{{ '/rlem2021' | relative_url }}/"> Back </a>
+  </h3>
+  {% endif %}
   <h3>Related posts</h3>
-  <ul class="related-posts">
-    {% for post in site.related_posts limit:3 %}
-      <li>
-        <a href="{{ site.baseurl }}{{ post.url }}">
-          {{ post.title }}
-          <small><time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date_to_string }}</time></small>
-        </a>
-      </li>
-    {% endfor %}
-  </ul>
+    <ul class="related-posts">
+      {% for post in site.posts reversed limit:3 %}
+        <li>
+          <a href="{{ '/' | relative_url }}{{ post.permalink }}">
+            {{ post.title }}
+            <small><time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date_to_string }}</time></small>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
 </aside>
 {% endif %}

@@ -4,7 +4,7 @@
  <title>Supplementary material</title>
  <link href="/atom.xml" rel="self"/>
  <link href="http://localhost:4000//"/>
- <updated>2021-10-19T20:43:24+02:00</updated>
+ <updated>2021-10-20T17:16:48+02:00</updated>
  <id>http://localhost:4000</id>
  <author>
    <name>Marco Biemann</name>
@@ -17,7 +17,7 @@
    <link href="http://localhost:4000//rlem2021/env"/>
    <updated>2021-10-19T00:00:00+02:00</updated>
    <id>http://localhost:4000/rlem2021/rlem2021-env</id>
-   <content type="html">&lt;p&gt;This post describes the environment used in the paper more in detail. We performed our experiments on the open source two-zone data centre environment of &lt;a href=&quot;https://github.com/IBM/rl-testbed-for-energyplus&quot;&gt;Moriyama et. al.&lt;/a&gt;. We recommend taking a look at &lt;a href=&quot;https://arxiv.org/abs/1808.10427&quot;&gt;their paper&lt;/a&gt;, that describes the environment in far greater detail.&lt;/p&gt;
+   <content type="html">&lt;p&gt;This post describes the environment used in the paper more in detail. We performed our experiments on the open source two-zone data centre environment of &lt;a href=&quot;https://github.com/IBM/rl-testbed-for-energyplus&quot;&gt;Moriyama et. al&lt;/a&gt;. We recommend taking a look at &lt;a href=&quot;https://arxiv.org/abs/1808.10427&quot;&gt;their paper&lt;/a&gt;, that describes the environment in far greater detail.&lt;/p&gt;
 
 &lt;p&gt;The HVAC system of the data centre can be described in the following image:&lt;/p&gt;
 
@@ -101,6 +101,59 @@
     &lt;/tr&gt;
   &lt;/tbody&gt;
 &lt;/table&gt;
+
+&lt;h3 id=&quot;weather-files&quot;&gt;Weather files&lt;/h3&gt;
+
+&lt;p&gt;We used the &lt;a href=&quot;https://energyplus.net/weather&quot;&gt;official EnergyPlus weather&lt;/a&gt; files for our experiments from the following locations:&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Years 1-10&lt;/th&gt;
+      &lt;th&gt;Years 11-20&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Oslo&lt;/td&gt;
+      &lt;td&gt;Hamburg&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Bergen&lt;/td&gt;
+      &lt;td&gt;Düsseldorf&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Stockholm&lt;/td&gt;
+      &lt;td&gt;Bremen&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Karlstad&lt;/td&gt;
+      &lt;td&gt;Saint Petersburg&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Kiruna&lt;/td&gt;
+      &lt;td&gt;Dundee&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Göteborg&lt;/td&gt;
+      &lt;td&gt;Amsterdam&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Tampere&lt;/td&gt;
+      &lt;td&gt;Groningen&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Helsinki&lt;/td&gt;
+      &lt;td&gt;Gdansk&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Berlin&lt;/td&gt;
+      &lt;td&gt;Szcezcin&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;The test location uses weather data from Copenhagen. In retroperspective, training for 20 years is very long and not necessary for all algorithms except PPO.&lt;/p&gt;
 
 &lt;h3 id=&quot;modifications-from-the-original-environment&quot;&gt;Modifications from the original environment&lt;/h3&gt;
 
@@ -204,59 +257,6 @@ self.action = self.low_action + (normalized_action + 1.)
   &lt;img src=&quot;/assets/images/rlem2021sac-great.png&quot; alt=&quot;sac-lstm&quot; class=&quot;img-responsive&quot; /&gt;
   &lt;img src=&quot;/assets/images/rlem2021slac-top.png&quot; alt=&quot;slac&quot; class=&quot;img-responsive&quot; /&gt;
   &lt;img src=&quot;/assets/images/rlem2021baseline.png&quot; alt=&quot;baseline&quot; class=&quot;img-responsive&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;weather-files&quot;&gt;Weather files&lt;/h3&gt;
-
-&lt;p&gt;We used the &lt;a href=&quot;https://energyplus.net/weather&quot;&gt;official EnergyPlus weather&lt;/a&gt; files for our experiments from the following locations:&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;Years 1-10&lt;/th&gt;
-      &lt;th&gt;Years 11-20&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Oslo&lt;/td&gt;
-      &lt;td&gt;Hamburg&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Bergen&lt;/td&gt;
-      &lt;td&gt;Düsseldorf&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Stockholm&lt;/td&gt;
-      &lt;td&gt;Bremen&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Karlstad&lt;/td&gt;
-      &lt;td&gt;Saint Petersburg&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Kiruna&lt;/td&gt;
-      &lt;td&gt;Dundee&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Göteborg&lt;/td&gt;
-      &lt;td&gt;Amsterdam&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Tampere&lt;/td&gt;
-      &lt;td&gt;Groningen&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Helsinki&lt;/td&gt;
-      &lt;td&gt;Gdansk&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Berlin&lt;/td&gt;
-      &lt;td&gt;Szcezcin&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;The test location uses weather data from Copenhagen. In retroperspective, training for 20 years is very long and not necessary for all algorithms except PPO.&lt;/p&gt;
 </content>
  </entry>
  
